@@ -95,3 +95,86 @@ button, .navbutton {
 footer, footer * {
   color: #111827 !important;
 }
+
+/* AdCypherByte professional black theme */
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #080b12 !important;
+  color: #f8fafc !important;
+}
+
+body {
+  background-color: #080b12 !important;
+}
+
+header,
+.topbar,
+main,
+section,
+footer,
+.hero,
+.about,
+.contact {
+  background-color: #080b12 !important;
+  color: #f8fafc !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, span, li, label, small, strong, em,
+nav a, header a, footer a {
+  color: #f8fafc !important;
+}
+
+.eyebrow,
+.muted,
+.hero-note {
+  color: #aab4c5 !important;
+}
+
+.card,
+.project-card,
+.video-card {
+  background-color: #111827 !important;
+  color: #f8fafc !important;
+  border: 1px solid #273449 !important;
+}
+
+input,
+textarea,
+select {
+  background-color: #111827 !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #aab4c5 !important;
+}
+
+.button.primary,
+button,
+.navbutton {
+  background-color: #f8fafc !important;
+  color: #080b12 !important;
+  border: 1px solid #f8fafc !important;
+}
+
+.button.secondary {
+  background-color: transparent !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+a:hover {
+  color: #60a5fa !important;
+}
+
+.brandmark {
+  background-color: #f8fafc !important;
+  color: #080b12 !important;
+}
