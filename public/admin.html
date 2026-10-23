@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AdCypherByte Admin</title><link rel="stylesheet" href="/portfolio/style.css"></head>
+<body class="admin-body"><header class="topbar"><a class="brand" href="/portfolio"><span class="brandmark">A</span> ADCYPHERBYTE</a><a href="/portfolio">← View website</a></header>
+<main class="admin-wrap">
+<section id="login-panel" class="admin-panel narrow"><div class="eyebrow">PRIVATE WORKSPACE</div><h1>Welcome back.</h1><p class="muted">Sign in to manage your portfolio projects and videos.</p><form id="login-form"><label>Admin password<input id="password" type="password" required autocomplete="current-password" placeholder="Enter your admin password"></label><button class="button primary full" type="submit">Sign in</button><p id="login-message" class="message"></p></form></section>
+<section id="dashboard" class="hidden">
+<div class="admin-heading"><div><div class="eyebrow">CONTENT MANAGEMENT</div><h1>Your portfolio.</h1><p class="muted">Add a project or video. Changes publish to the public portfolio immediately.</p></div><button id="logout" class="button secondary">Log out</button></div>
+<div class="admin-columns">
+<form id="project-form" class="admin-panel"><h2 id="form-title">Add a project</h2><input type="hidden" id="project-id">
+<label>Project title *<input id="title" required maxlength="120" placeholder="e.g. Brand campaign concept"></label>
+<label>Category<select id="category"><option>Project</option><option>Design</option><option>Technology</option><option>Video</option><option>Marketing</option><option>Podcast</option><option>Other</option></select></label>
+<label>Description<textarea id="description" rows="4" maxlength="1200" placeholder="What was the goal? What did you create?"></textarea></label>
+<label>Image URL<input id="image_url" type="url" placeholder="https://... (optional)"></label>
+<label>YouTube URL<input id="youtube_url" type="url" placeholder="https://www.youtube.com/watch?v=... (optional)"></label>
+<label>Project or portfolio link<input id="project_url" type="url" placeholder="https://... (optional)"></label>
+<label class="check-label"><input id="featured" type="checkbox"> Feature this project</label>
+<div class="form-actions"><button class="button primary" type="submit">Save project</button><button class="button secondary" type="button" id="reset-form">Clear</button></div><p id="form-message" class="message"></p></form>
+<div class="admin-panel"><div class="list-heading"><h2>Published content</h2><button id="refresh" class="button secondary small">Refresh</button></div><div id="admin-list" class="admin-list"><p class="muted">Loading…</p></div></div>
+</div></section>
+</main><script src="/portfolio/admin.js"></script></body></html>

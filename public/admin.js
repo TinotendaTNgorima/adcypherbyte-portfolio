@@ -1,0 +1,19 @@
+const API='/portfolio/api';
+const $=id=>document.getElementById(id);
+let projects=[];
+function safe(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function request(path,options={}){const r=await fetch(API+path,{credentials:'same-origin',...options,headers:{'Content-Type':'application/json',...(options.headers||{})}});let data={};try{data=await r.json()}catch(e){}if(!r.ok)throw Error(data.error||'Something went wrong.');return data}
+function showDashboard(){ $('login-panel').classList.add('hidden');$('dashboard').classList.remove('hidden');loadProjects()}
+function showLogin(){ $('dashboard').classList.add('hidden');$('login-panel').classList.remove('hidden')}
+$('login-form').addEventListener('submit',async e=>{e.preventDefault();$('login-message').textContent='Signing in…';try{await request('/login',{method:'POST',body:JSON.stringify({password:$('password').value})});$('password').value='';showDashboard()}catch(err){$('login-message').textContent=err.message}});
+$('logout').addEventListener('click',async()=>{try{await request('/logout',{method:'POST',body:'{}'})}catch(e){}showLogin()});
+function resetForm(){$('project-form').reset();$('project-id').value='';$('form-title').textContent='Add a project';$('form-message').textContent=''}
+$('reset-form').addEventListener('click',resetForm);
+$('refresh').addEventListener('click',loadProjects);
+$('project-form').addEventListener('submit',async e=>{e.preventDefault();const id=$('project-id').value;const body={title:$('title').value.trim(),category:$('category').value,description:$('description').value.trim(),image_url:$('image_url').value.trim(),youtube_url:$('youtube_url').value.trim(),project_url:$('project_url').value.trim(),featured:$('featured').checked?1:0};$('form-message').textContent='Saving…';try{await request('/projects'+(id?'/'+id:''),{method:id?'PUT':'POST',body:JSON.stringify(body)});$('form-message').textContent='Saved successfully.';resetForm();await loadProjects()}catch(err){$('form-message').textContent=err.message}});
+async function loadProjects(){try{const data=await request('/projects');projects=data;renderList()}catch(err){$('admin-list').innerHTML='<p class="muted">'+safe(err.message)+' — if you are logged out, sign in again.</p>';if(err.message.toLowerCase().includes('unauthorized'))showLogin()}}
+function renderList(){$('admin-list').innerHTML=projects.length?projects.map(p=>`<div class="admin-item"><div><h3>${safe(p.title)}</h3><p>${safe(p.category)}${p.youtube_url?' · YouTube video':''}${p.featured?' · Featured':''}</p></div><div class="item-actions"><button class="button secondary" data-edit="${p.id}">Edit</button><button class="button secondary" data-delete="${p.id}">Delete</button></div></div>`).join(''):'<p class="muted">No content yet. Add your first project using the form.</p>';
+document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>editProject(Number(b.dataset.edit))));document.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>deleteProject(Number(b.dataset.delete))))}
+function editProject(id){const p=projects.find(x=>x.id===id);if(!p)return;$('project-id').value=p.id;$('title').value=p.title||'';$('category').value=p.category||'Project';$('description').value=p.description||'';$('image_url').value=p.image_url||'';$('youtube_url').value=p.youtube_url||'';$('project_url').value=p.project_url||'';$('featured').checked=!!p.featured;$('form-title').textContent='Edit project';$('form-message').textContent='';$('project-form').scrollIntoView({behavior:'smooth',block:'start'})}
+async function deleteProject(id){const p=projects.find(x=>x.id===id);if(!p||!confirm('Delete “'+p.title+'”? This cannot be undone.'))return;try{await request('/projects/'+id,{method:'DELETE'});await loadProjects()}catch(err){alert(err.message)}}
+request('/session').then(()=>showDashboard()).catch(()=>showLogin());
