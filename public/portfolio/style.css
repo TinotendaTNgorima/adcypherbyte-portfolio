@@ -58,3 +58,40 @@ button,
 .video-card {
   border: 1px solid #e5e7eb;
 }
+
+/* Improve readability across the white theme */
+body {
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+body * {
+  border-color: #e5e7eb;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, span, label, li, small, strong, em,
+nav a, header a, footer a {
+  color: #111827 !important;
+}
+
+input, textarea, select {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: #9ca3af !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+  opacity: 1;
+}
+
+button, .navbutton {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+}
+
+footer, footer * {
+  color: #111827 !important;
+}
