@@ -178,3 +178,36 @@ a:hover {
   background-color: #f8fafc !important;
   color: #080b12 !important;
 }
+
+/* AdCypherByte logo */
+.brand-logo {
+  display: block;
+  width: 190px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-logo {
+  width: 155px;
+}
+
+.topbar .brand {
+  display: flex;
+  align-items: center;
+}
+
+footer .brand {
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  .brand-logo {
+    width: 145px;
+  }
+
+  .footer-logo {
+    width: 125px;
+  }
+}
