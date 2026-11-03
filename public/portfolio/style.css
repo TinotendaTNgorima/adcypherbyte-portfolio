@@ -180,7 +180,7 @@ a:hover {
 }
 
 /* AdCypherByte logo */
-.brand-logo {
+ /* TOP LEFT LOGO */ .brand-logo {   display: block;   width: auto;   height: 32px;   max-width: 150px;   object-fit: contain;   object-position: left center; }  /* FOOTER LOGO */ .footer-logo {   height: 38px;   max-width: 170px; } {
   display: block;
   width: 190px;
   max-width: 100%;
@@ -203,7 +203,7 @@ footer .brand {
 }
 
 @media (max-width: 600px) {
-  .brand-logo {
+   /* TOP LEFT LOGO */ .brand-logo {   display: block;   width: auto;   height: 32px;   max-width: 150px;   object-fit: contain;   object-position: left center; }  /* FOOTER LOGO */ .footer-logo {   height: 38px;   max-width: 170px; } {
     width: 145px;
   }
 
@@ -211,7 +211,7 @@ footer .brand {
     width: 125px;
   }
 }
-.brand-logo {
+ /* TOP LEFT LOGO */ .brand-logo {   display: block;   width: auto;   height: 32px;   max-width: 150px;   object-fit: contain;   object-position: left center; }  /* FOOTER LOGO */ .footer-logo {   height: 38px;   max-width: 170px; } {
   display: block;
   width: 190px;
   max-width: 100%;
