@@ -1,4 +1,6 @@
+
 const API = '/portfolio/api';
+
 const $ = id => document.getElementById(id);
 
 let projects = [];
@@ -24,40 +26,47 @@ async function request(path, options = {}) {
   });
 
   let data = {};
+
   try {
     data = await r.json();
   } catch (e) {}
 
   if (!r.ok) {
-    throw Error(data.error || 'Request failed. Please sign in through Cloudflare Access.');
+    throw Error(
+      data.error || 'Request failed. Check your Cloudflare Access login.'
+    );
   }
 
   return data;
 }
 
+function showStatus(message) {
+  $('access-status').classList.remove('hidden');
+  $('dashboard').classList.add('hidden');
+  $('access-message').textContent = message;
+}
+
 function showDashboard() {
-  $('login-panel').classList.add('hidden');
+  $('access-status').classList.add('hidden');
   $('dashboard').classList.remove('hidden');
   loadProjects();
 }
 
-function showLogin() {
-  $('dashboard').classList.add('hidden');
-  $('login-panel').classList.remove('hidden');
-  $('login-message').textContent =
-    'Please sign in through your Cloudflare Access email verification.';
-}
+function loginThroughCloudflare() {
+  showStatus('Redirecting to secure email verification...');
 
-$('login-form').addEventListener('submit', e => {
-  e.preventDefault();
-  $('login-message').textContent =
-    'Use your Cloudflare Access sign-in instead of an admin password.';
-});
+  const returnTo = window.location.origin + '/portfolio/admin';
+
+  window.location.replace(
+    '/cdn-cgi/access/login/adcypherbyte.com?redirect_url=' +
+    encodeURIComponent(returnTo)
+  );
+}
 
 $('logout').addEventListener('click', () => {
   window.location.href =
     '/cdn-cgi/access/logout?returnTo=' +
-    encodeURIComponent('https://adcypherbyte.com/');
+    encodeURIComponent('https://adcypherbyte.com/portfolio/admin');
 });
 
 function resetForm() {
@@ -85,7 +94,7 @@ $('project-form').addEventListener('submit', async e => {
     featured: $('featured').checked ? 1 : 0
   };
 
-  $('form-message').textContent = 'Saving…';
+  $('form-message').textContent = 'Saving...';
 
   try {
     await request('/admin/projects' + (id ? '/' + id : ''), {
@@ -94,6 +103,7 @@ $('project-form').addEventListener('submit', async e => {
     });
 
     $('form-message').textContent = 'Saved successfully.';
+
     resetForm();
     await loadProjects();
 
@@ -105,12 +115,13 @@ $('project-form').addEventListener('submit', async e => {
 async function loadProjects() {
   try {
     const data = await request('/projects');
+
     projects = data;
+
     renderList();
 
   } catch (err) {
-    $('admin-list').innerHTML =
-      '<p class="muted">' + safe(err.message) + '</p>';
+    $('admin-list').textContent = err.message;
   }
 }
 
@@ -120,15 +131,25 @@ function renderList() {
       <div class="admin-item">
         <div>
           <h3>${safe(p.title)}</h3>
-          <p>${safe(p.category)}${p.youtube_url ? ' · YouTube video' : ''}${p.featured ? ' · Featured' : ''}</p>
+          <p>
+            ${safe(p.category)}
+            ${p.youtube_url ? ' · YouTube video' : ''}
+            ${p.featured ? ' · Featured' : ''}
+          </p>
         </div>
+
         <div class="item-actions">
-          <button class="button secondary" data-edit="${p.id}">Edit</button>
-          <button class="button secondary" data-delete="${p.id}">Delete</button>
+          <button class="button secondary" data-edit="${p.id}">
+            Edit
+          </button>
+
+          <button class="button secondary" data-delete="${p.id}">
+            Delete
+          </button>
         </div>
       </div>
     `).join('')
-    : '<p class="muted">No content yet. Add your first project using the form.</p>';
+    : '<p class="muted">No content yet. Add your first project.</p>';
 
   document.querySelectorAll('[data-edit]').forEach(b => {
     b.addEventListener('click', () =>
@@ -145,6 +166,7 @@ function renderList() {
 
 function editProject(id) {
   const p = projects.find(x => x.id === id);
+
   if (!p) return;
 
   $('project-id').value = p.id;
@@ -155,6 +177,7 @@ function editProject(id) {
   $('youtube_url').value = p.youtube_url || '';
   $('project_url').value = p.project_url || '';
   $('featured').checked = !!p.featured;
+
   $('form-title').textContent = 'Edit project';
   $('form-message').textContent = '';
 
@@ -183,9 +206,22 @@ async function deleteProject(id) {
   }
 }
 
-request('/admin/session')
-  .then(data => {
-    if (!data.ok) throw Error('Access verification failed.');
+// Verify Cloudflare Access session before showing the dashboard.
+async function initializeAdmin() {
+  showStatus('Checking your Cloudflare Access email verification...');
+
+  try {
+    const data = await request('/admin/session');
+
+    if (!data.ok) {
+      throw new Error('Access verification failed.');
+    }
+
     showDashboard();
-  })
-  .catch(() => showLogin());
+
+  } catch (err) {
+    loginThroughCloudflare();
+  }
+}
+
+initializeAdmin();
