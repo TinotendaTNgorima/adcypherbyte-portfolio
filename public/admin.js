@@ -33,7 +33,7 @@ async function request(path, options = {}) {
 
   if (!r.ok) {
     throw Error(
-      data.error || 'Request failed. Check your Cloudflare Access login.'
+      data.error || 'Request failed. Check your Cloudflare Access authentication.'
     );
   }
 
@@ -50,17 +50,6 @@ function showDashboard() {
   $('access-status').classList.add('hidden');
   $('dashboard').classList.remove('hidden');
   loadProjects();
-}
-
-function loginThroughCloudflare() {
-  showStatus('Redirecting to secure email verification...');
-
-  const returnTo = window.location.origin + '/portfolio/admin';
-
-  window.location.replace(
-    '/cdn-cgi/access/login/adcypherbyte.com?redirect_url=' +
-    encodeURIComponent(returnTo)
-  );
 }
 
 $('logout').addEventListener('click', () => {
@@ -117,7 +106,6 @@ async function loadProjects() {
     const data = await request('/projects');
 
     projects = data;
-
     renderList();
 
   } catch (err) {
@@ -206,9 +194,8 @@ async function deleteProject(id) {
   }
 }
 
-// Verify Cloudflare Access session before showing the dashboard.
 async function initializeAdmin() {
-  showStatus('Checking your Cloudflare Access email verification...');
+  showStatus('Checking your Cloudflare Access authentication...');
 
   try {
     const data = await request('/admin/session');
@@ -220,7 +207,11 @@ async function initializeAdmin() {
     showDashboard();
 
   } catch (err) {
-    loginThroughCloudflare();
+    showStatus(
+      'Cloudflare Access has not authorized this dashboard request. ' +
+      'Please check that /portfolio/admin* and /portfolio/api/admin* ' +
+      'are protected by your Cloudflare Access application, then reload this page.'
+    );
   }
 }
 
